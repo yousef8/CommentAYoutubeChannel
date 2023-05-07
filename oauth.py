@@ -3,68 +3,85 @@ from google.oauth2.credentials import Credentials
 from oauthlib.oauth2.rfc6749.errors import AccessDeniedError
 from google.auth.transport.requests import Request
 from google.auth.exceptions import RefreshError
+import logging
+import logging.handlers
 
+###################### Logger configurations #############################
+logger = logging.getLogger("oauth")
+logger.setLevel(logging.DEBUG)
+
+styleFormat = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s", datefmt="%d-%m-%Y %H:%M:%S")
+
+fileHandler = logging.handlers.TimedRotatingFileHandler(
+    filename="logger.log", when="w5")
+
+fileHandler.setFormatter(styleFormat)
+
+fileHandler.setLevel(logging.DEBUG)
+logger.addHandler(fileHandler)
+
+
+########################## Main code ################################
 
 def start_oauth():
     flow = InstalledAppFlow.from_client_secrets_file(
         'client_secret.json',
         scopes=["https://www.googleapis.com/auth/youtube.readonly"],)
 
-    print("Start Oauth Process...")
+    logger.info("Start Oauth Process...")
 
     try:
         flow.run_local_server(prompt="consent")
     except AccessDeniedError:
-        print("Access Denied")
+        logger.info("Access Denied")
         return None
 
     try:
         credentials = flow.credentials
     except ValueError:
-        print("There was no access token adquired")
-        print("Run the script again for another try")
+        logger.info("There was no access token adquired")
+        logger.info("Run the script again for another try")
         return None
 
-    print("Tokens Acquired")
-    print("Saving Tokens")
+    logger.info("Tokens Acquired")
+    logger.info("Saving Tokens")
     with open("tokens.json", "w") as f:
         f.write(credentials.to_json())
-        print("Credentiasl Saved")
+        logger.info("Credentiasl Saved")
 
     return credentials
 
 
 def get_credentials():
     try:
-        print("Loading saved tokens")
+        logger.info("Loading saved tokens")
         credentials = Credentials.from_authorized_user_file("tokens.json")
-        print("Tokens acquired successfully")
+        logger.info("Tokens acquired successfully")
     except FileNotFoundError:
-        print("There is no saved tokens")
+        logger.info("There is no saved tokens")
         return start_oauth()
 
-    print("Checking tokens Validity")
+    logger.info("Checking tokens Validity")
     if credentials.valid:
-        print("Tokens are valid")
+        logger.info("Tokens are valid")
         return credentials
 
     if credentials.expired and credentials.refresh_token:
-        print("Token is expired")
+        logger.info("Token is expired")
         try:
-            print("Regreshing token")
+            logger.info("Regreshing token")
             credentials.refresh(Request())
-            print("Token refreshed successfully")
+            logger.info("Token refreshed successfully")
+
+            logger.info("Saving tokens")
+            with open("tokens.json", "w") as f:
+                f.write(credentials.to_json())
+                logger.info("Saved successfully")
+
+            return credentials
         except RefreshError:
-            print("Couldn't refresh tokens")
+            logger.info("Couldn't refresh tokens")
             return None
 
-        print("Saving tokens")
-        with open("tokens.json", "w") as f:
-            f.write(credentials.to_json())
-            print("Saved successfully")
-
-        return credentials
     return start_oauth()
-
-
-get_credentials()
