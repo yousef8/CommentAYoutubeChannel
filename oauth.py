@@ -27,7 +27,7 @@ logger.addHandler(fileHandler)
 def start_oauth():
     flow = InstalledAppFlow.from_client_secrets_file(
         'client_secret.json',
-        scopes=["https://www.googleapis.com/auth/youtube.readonly"],)
+        scopes=["https://www.googleapis.com/auth/youtube.readonly", "https://www.googleapis.com/auth/youtube.force-ssl"],)
 
     logger.info("Start Oauth Process...")
 
