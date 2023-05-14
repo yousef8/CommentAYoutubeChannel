@@ -70,9 +70,9 @@ def get_credentials():
     if credentials.expired and credentials.refresh_token:
         logger.info("Token is expired")
         try:
-            logger.info("Regreshing token")
+            logger.info("Refreshing tokens")
             credentials.refresh(Request())
-            logger.info("Token refreshed successfully")
+            logger.info("Tokens refreshed successfully")
 
             logger.info("Saving tokens")
             with open("tokens.json", "w") as f:
