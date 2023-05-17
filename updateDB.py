@@ -15,13 +15,21 @@ logger.setLevel(logging.DEBUG)
 styleFormat = logging.Formatter(
     "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s", datefmt="%d-%m-%Y %H:%M:%S")
 
+streamFormat = logging.Formatter("%(levelname)s - %(message)s")
+
 fileHandler = logging.handlers.TimedRotatingFileHandler(
     filename="logger.log", when="w5")
 
+streamHandler = logging.StreamHandler(stream=sys.stdout)
+
 fileHandler.setFormatter(styleFormat)
+streamHandler.setFormatter(streamFormat)
 
 fileHandler.setLevel(logging.DEBUG)
+streamHandler.setLevel(logging.DEBUG)
+
 logger.addHandler(fileHandler)
+logger.addHandler(streamHandler)
 
 
 ########################## Main code ################################
