@@ -81,11 +81,14 @@ def update_db(id):
     if new_videos_count > 50:
         with build('youtube', 'v3', credentials=credentials) as youtube:
             next_page_token = None
-            for i in range(new_videos_count//50 + bool(new_videos_count % 50)-1):
+            for i in range(new_videos_count//50 + bool(new_videos_count % 50)):
                 request = youtube.playlistItems().list(part="snippet", maxResults=50, playlistId=id,
                                                        fields="nextPageToken,items/snippet(title,resourceId/videoId),pageInfo", pageToken=next_page_token)
                 res = request.execute()
-                next_page_token = res['nextPageToken']
+
+                if 'nextPageToken' in res:
+                    next_page_token = res['nextPageToken']
+
                 for video in res['items']:
                     channel.add_video(video['snippet']['title'],
                                       video['snippet']['resourceId']['videoId'])
