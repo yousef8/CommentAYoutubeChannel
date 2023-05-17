@@ -21,6 +21,8 @@ class Playlist:
         return self.cur.fetchone()[0]
 
     def add_video(self, title, video_id, is_commented="NO"):
+        # Sanitize the title input
+        title = title.replace("'", "")
         self.cur.execute(
             f"INSERT INTO {self.playlist_id} (title, link, videoID, commented) VALUES ('{title}', '{'https://www.youtube.com/watch?v='+video_id}', '{video_id}', '{is_commented}')")
         self.connection.commit()
