@@ -41,7 +41,7 @@ def update_db(id):
     logger.info("Credentials acquired")
 
     # 1 - check if table for this playlist exists or not
-    channel = Playlist(id.replace('-', ''))
+    channel = Playlist(id)
 
     # 2 - get existing videos count
     existing_videos_count = channel.get_total_videos_count()
