@@ -63,6 +63,7 @@ def update_db(id):
             updated_videos_count = res['items'][0]['contentDetails']['itemCount']
         except IndexError:
             logger.error("Wrong Channel ID")
+            channel.remove_playlist()
             return
 
         logger.info(
