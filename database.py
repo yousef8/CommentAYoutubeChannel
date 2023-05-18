@@ -3,7 +3,8 @@ import sqlite3
 
 class Playlist:
     def __init__(self, playlist_id):
-        self.playlist_id = playlist_id
+        # Sanitize Input
+        self.playlist_id = playlist_id.replace('-', '')
         self.connection = sqlite3.connect("videos.db")
         self.cur = self.connection.cursor()
         self.create_table()
