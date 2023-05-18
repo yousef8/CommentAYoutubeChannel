@@ -49,3 +49,9 @@ class Playlist:
             f"DELETE FROM {self.playlist_id} WHERE rowid NOT IN (SELECT rowid FROM {self.playlist_id} GROUP BY videoID)"
         )
         self.connection.commit()
+
+    def remove_playlist(self):
+        self.cur.execute(
+            f"DROP TABLE {self.playlist_id}"
+        )
+        self.connection.commit()
