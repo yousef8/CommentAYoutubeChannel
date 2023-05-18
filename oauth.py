@@ -85,3 +85,7 @@ def get_credentials():
             return None
 
     return start_oauth()
+
+
+if __name__ == '__main__':
+    start_oauth()
