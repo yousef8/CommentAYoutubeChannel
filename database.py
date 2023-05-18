@@ -33,7 +33,6 @@ class Playlist:
             f"UPDATE {self.playlist_id} SET commented = 'YES' WHERE videoID = '{video_id}'"
         )
         self.connection.commit()
-        print(self.cur.fetchall())
 
     def get_next_uncommented_video(self):
         '''Returns dict{title, link, id, commented}'''
