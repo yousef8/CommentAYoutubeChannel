@@ -35,11 +35,14 @@ class Playlist:
         print(self.cur.fetchall())
 
     def get_next_uncommented_video(self):
+        '''Returns dict{title, link, id, commented}'''
         self.cur.execute(
             f"SELECT *  FROM {self.playlist_id} WHERE commented = 'NO' LIMIT 1"
         )
         self.connection.commit()
-        return self.cur.fetchone()
+        video = self.cur.fetchone()
+
+        return {'title': video[0], 'link': video[1], 'id': video[2], 'commented': video[3]}
 
     def remove_duplicates(self):
         self.cur.execute(
